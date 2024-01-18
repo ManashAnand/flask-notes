@@ -5,7 +5,7 @@ from flask_cors import CORS
 import cv2
 import io
 import os
-
+import uuid
 import numpy as np
 
 
@@ -34,8 +34,9 @@ def login():
     
 
 
-@app.route('/getImage', methods=['POST'])
-def convertImg():
+@app.route('/grayscale', methods=['POST'])
+def grayscale():
+    unique_id = uuid.uuid4()
     try:
         # Ensure the 'img' folder exists in the current working directory
         img_folder = os.path.join(os.getcwd(), 'img')
@@ -50,7 +51,7 @@ def convertImg():
         img_gray = cv2.cvtColor(img_open, cv2.COLOR_BGR2GRAY)
 
         # Save the grayscale image
-        save_path = os.path.join(img_folder, "manash.jpg")
+        save_path = os.path.join(img_folder, f"manash_{unique_id}.jpg")
         img_save = cv2.imwrite(save_path, img_gray)
 
         return jsonify({"message": "Image uploaded and processed successfully"})
@@ -58,7 +59,36 @@ def convertImg():
         print(e)
         return jsonify({"error": "An error occurred during image upload"})
 
+@app.route('/newroute', methods=['POST'])
+def something():
+    
+    unique_id = uuid.uuid4()
+    try:
+        img_folder = os.path.join(os.getcwd(), 'img_resize')
+        os.makedirs(img_folder, exist_ok=True)
+        
+        img_file = request.files['image']
+        height = int(request.form['height'])
+        width = int(request.form['width'])
 
-
+        print(height)
+        print(width)
+        img_bytes = img_file.read()
+        img_array = np.frombuffer(img_bytes, dtype=np.uint8)
+        img_open = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+        if height > 0 and width > 0:
+            img_resize = cv2.resize(img_open, (width, height))
+        # img_resize = cv2.resize(img_open,(height,width))
+        
+            save_path = os.path.join(img_folder, f"manash_{unique_id}.jpg")
+            img_save = cv2.imwrite(save_path, img_resize)
+        
+        return jsonify({"message": "Image resize to 256 height and 256 width"})
+    except Exception as e:
+        print(e)
+        return jsonify({"error": "An error occurred during image upload"})
+    
+    
+    
 if __name__ == "__main__":
     app.run(debug=True)

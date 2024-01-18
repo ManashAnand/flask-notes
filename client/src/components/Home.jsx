@@ -4,6 +4,8 @@ import axios from "axios";
 import { useState } from "react";
 const Home = () => {
   const [img, setImg] = useState();
+  const [height,setHeight] = useState()
+  const [width,setWidth] = useState()
  
   const sendImg = async (e) => {
     e.preventDefault();
@@ -17,6 +19,8 @@ const Home = () => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("image", img);
+    formData.append("height",height)
+    formData.append("width",width);
     const res = await axios.post("http://localhost:5000/newroute", formData);
     console.log(res);
   }
@@ -50,7 +54,14 @@ const Home = () => {
         <div className="py-2.5 px-5 border rounded-xl bg-violet-700 text-white text-2xl cursor-pointer active:scale-95" onClick={sendImg}>Change image to grayscale</div>
     </div>
     <div className=" flex justify-center items-center mt-10">
-        <div className="py-2.5 px-5 border rounded-xl bg-violet-700 text-white text-2xl cursor-pointer active:scale-95" onClick={newRoute}>Change image to 256 and 256</div>
+    
+        <div className="py-2.5 px-5 border rounded-xl bg-violet-700 text-white text-2xl cursor-pointer active:scale-95 flex  gap-2" >
+          <input type="number" name="" id="" capture className="h-16 w-32 text-black flex justify-center items-center " placeholder="height(px)" value={height} onChange={(e) => setHeight(e.target.value)}/>
+          <input type="number" name="" id="" capture className="h-16 w-32 text-black flex justify-center items-center" placeholder="width(px)" value={width} onChange={(e) => setWidth(e.target.value)}/>
+        </div>
+    </div>
+    <div className=" flex justify-center items-center mt-10">
+        <div className="py-2.5 px-5 border rounded-xl bg-violet-700 text-white text-2xl cursor-pointer active:scale-95" onClick={newRoute}>resize image to 256px and 256px</div>
     </div>
     </>
   );
