@@ -59,8 +59,8 @@ def grayscale():
         print(e)
         return jsonify({"error": "An error occurred during image upload"})
 
-@app.route('/newroute', methods=['POST'])
-def something():
+@app.route('/resize', methods=['POST'])
+def resize():
     
     unique_id = uuid.uuid4()
     try:
@@ -89,6 +89,35 @@ def something():
         return jsonify({"error": "An error occurred during image upload"})
     
     
+@app.route('/rotateAngle', methods=['POST'])
+def flip():
+    print("working")
+    unique_id = uuid.uuid4()
+    try:
+        img_folder = os.path.join(os.getcwd(), 'img_flip')
+        os.makedirs(img_folder, exist_ok=True)
+        
+        print(request.form)
+        print(request.files)
+        
+        img_file = request.files['image']
+        angle = int(request.form['rotate'])
+        print(angle)
+        
+        img_bytes = img_file.read()
+        img_array = np.frombuffer(img_bytes, dtype=np.uint8)
+        img_open = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+        
+        img_flip = cv2.flip(img_open,angle)
     
+        save_path = os.path.join(img_folder, f"manash_{unique_id}.jpg")
+        img_save = cv2.imwrite(save_path, img_flip)
+        
+        return jsonify({"message": "image flipped"})
+    except Exception as e:
+        print(e)
+        return jsonify({"error": "An error occurred during image upload"})
+    
+
 if __name__ == "__main__":
     app.run(debug=True)

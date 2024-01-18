@@ -9,6 +9,8 @@ lerna-debug.log*
 
 img
 img_resize
+img_flip
+
 node_modules
 dist
 dist-ssr
