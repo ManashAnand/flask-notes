@@ -99,7 +99,7 @@ const Home = () => {
           className="py-2.5 px-5 border rounded-xl bg-violet-700 text-white text-2xl cursor-pointer active:scale-95"
           onClick={resize}
         >
-          resize image to 256px and 256px
+          resize image 
         </div>
       </div>
 
